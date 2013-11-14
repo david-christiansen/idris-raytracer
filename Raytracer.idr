@@ -1,30 +1,20 @@
 module Raytracer
+import Units
 import Vector
 import PPM
 
 %default total
 
-data Point = P Float Float Float
-
-(+) : Point -> Vector -> Point
-(P x y z) + (V a b c) = P (x + a) (y + b) (z + c)
+data Point = P (Dim Meters) (Dim Meters) (Dim Meters)
 
 data Ray = R Point Vector
 
 
-
-
+(+) : Point -> Vector -> Point
+(P (M x) (M y) (M z)) + (V a b c) = P (M (x + a)) (M (y + b)) (M (z + c))
 
 data Object : Type where
-  Sphere : (center : Point) -> (radius : Float) -> Object
-
-data Unit = Degrees | Radians | Pixels
-data Dim : Unit -> Type where
-  Deg : Float -> Dim Degrees
-  Rad : Float -> Dim Radians
-  Pix : Float -> Dim Pixels
-
--- bare floats represent measurements in the world
+  Sphere : (center : Point) -> (radius : Dim Meters) -> Object
 
 toRad : Dim Degrees -> Dim Radians
 toRad (Deg d) = Rad $ d * (pi / 180)
