@@ -18,15 +18,18 @@ data Ray = R Point Vector
 data Object : Type where
   Sphere : (center : Point) -> (radius : Float) -> Object
 
-data Degrees = Deg Float
-data Radians = Rad Float
-data Pixels = Pix Int
+data Unit = Degrees | Radians | Pixels
+data Dim : Unit -> Type where
+  Deg : Float -> Dim Degrees
+  Rad : Float -> Dim Radians
+  Pix : Float -> Dim Pixels
+
 -- bare floats represent measurements in the world
 
-toRad : Degrees -> Radians
+toRad : Dim Degrees -> Dim Radians
 toRad (Deg d) = Rad $ d * (pi / 180)
 
-tan : Radians -> Float
+tan : Dim Radians -> Float
 tan (Rad r) = tan r
 
 record Scene : Type where
@@ -34,7 +37,7 @@ record Scene : Type where
             (lights : List Point) -> -- light sources
             (camera : Point) -> -- camera location
             (lookingAt : Point) ->
-            (fieldOfView : Degrees) ->
+            (fieldOfView : Dim Degrees) ->
             (background : Color) ->
             Scene
 
